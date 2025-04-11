@@ -1,8 +1,8 @@
-package util.validation;
+package util;
 
 import java.util.ArrayList;
 
-public class ValidationResponse{
+public class ErrorResponse {
     private boolean valid = true;
     private final ArrayList<String> messages = new ArrayList<>();
 
@@ -12,6 +12,10 @@ public class ValidationResponse{
 
     public void invalidate(){
         this.valid = false;
+    }
+
+    public void validate(){
+        this.valid = true;
     }
 
     /**

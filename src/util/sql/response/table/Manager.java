@@ -1,4 +1,4 @@
-package util.sql.table;
+package util.sql.response.table;
 
 import util.ImageUtil;
 

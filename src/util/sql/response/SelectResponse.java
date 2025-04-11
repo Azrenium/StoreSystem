@@ -1,4 +1,4 @@
-package util.sql;
+package util.sql.response;
 
 import util.ErrorResponse;
 

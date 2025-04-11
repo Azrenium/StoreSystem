@@ -1,5 +1,12 @@
+import login.Login;
+import window.WindowManager;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello, World!");
+        WindowManager.startWindow(Login.class);
+
+        while (WindowManager.hasActiveWindows()){
+            //keep going
+        }
     }
 }

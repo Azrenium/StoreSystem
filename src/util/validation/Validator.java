@@ -1,14 +1,15 @@
-package util;
+package util.validation;
 
-import java.util.ArrayList;
+import util.ErrorResponse;
+
 import java.util.regex.Pattern;
 
 public class Validator {
     private static Pattern emailRegexPattern = Pattern.compile("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
             + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$");
 
-    public static ValidationResponse isUsernameValid(String username) {
-        ValidationResponse response = new ValidationResponse();
+    public static ErrorResponse isUsernameValid(String username) {
+        ErrorResponse response = new ErrorResponse();
 
         for(char c : username.toCharArray()) {
             if(!Character.isAlphabetic(c) && !Character.isDigit(c)) {
@@ -22,16 +23,16 @@ public class Validator {
         return response;
     }
 
-    public static ValidationResponse isEmailValid(String email) {
-        ValidationResponse response = new ValidationResponse();
+    public static ErrorResponse isEmailValid(String email) {
+        ErrorResponse response = new ErrorResponse();
 
         if(!emailRegexPattern.matcher(email).matches()) response.addErrorMessage("Invalid email!");
 
         return response;
     }
 
-    public static ValidationResponse isPasswordValid(String password) {
-        ValidationResponse response = new ValidationResponse();
+    public static ErrorResponse isPasswordValid(String password) {
+        ErrorResponse response = new ErrorResponse();
 
         if(password.length() < 8) response.addErrorMessage("Password must be at least 8 characters!");
 
@@ -49,41 +50,5 @@ public class Validator {
         if(!hasNumber) response.addErrorMessage("Password must have a number!");
 
         return response;
-    }
-
-    public static class ValidationResponse{
-        private boolean valid = true;
-        private final ArrayList<String> messages = new ArrayList<>();
-
-        public boolean isValid() {
-            return valid;
-        }
-
-        public void invalidate(){
-            this.valid = false;
-        }
-
-        /**
-         * Automatically invalidates the response.
-         * @param message   The error message to add to the response.
-         */
-        public void addErrorMessage(String message){
-            this.messages.add(message);
-            invalidate();
-        }
-
-        public ArrayList<String> getErrorMessages(){
-            return this.messages;
-        }
-
-        public String getErrorMessagesAsString(){
-            StringBuilder sb = new StringBuilder();
-
-            this.messages.forEach(it -> sb.append(it).append("\n"));
-
-            if(!this.messages.isEmpty()) sb.deleteCharAt(sb.length()-1);
-
-            return sb.toString();
-        }
     }
 }
