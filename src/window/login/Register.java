@@ -1,4 +1,4 @@
-package login;
+package window.login;
 
 import org.mindrot.jbcrypt.BCrypt;
 import util.sql.Connect;

@@ -1,13 +1,14 @@
-package login;
+package window.login;
 
+import data.Data;
 import util.sql.Connect;
 import util.sql.response.RowResponse;
 import util.sql.response.table.Manager;
 import window.Window;
 import window.WindowManager;
+import window.welcome.Welcome;
 
 import javax.swing.*;
-import java.awt.event.WindowEvent;
 
 public class Login extends Window {
     private JPanel panel;
@@ -41,7 +42,12 @@ public class Login extends Window {
                 JOptionPane.showMessageDialog(null, response.getErrorMessagesAsString());
             } else{
                 Manager manager = response.getData();
-                JOptionPane.showMessageDialog(null, "Successful login as: " + manager.getUsername());
+
+                Data.setManager(manager);
+
+                WindowManager.startWindow(Welcome.class);
+
+                dispose();
             }
         });
     }

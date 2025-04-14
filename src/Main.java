@@ -1,4 +1,4 @@
-import login.Login;
+import window.login.Login;
 import window.WindowManager;
 
 public class Main {

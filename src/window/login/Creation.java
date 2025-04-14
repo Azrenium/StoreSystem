@@ -1,4 +1,4 @@
-package login;
+package window.login;
 
 import window.Window;
 import window.WindowManager;
