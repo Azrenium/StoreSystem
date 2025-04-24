@@ -6,7 +6,12 @@ public class Main {
         WindowManager.startWindow(Login.class);
 
         while (WindowManager.hasActiveWindows()){
-            //keep going
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                System.out.println("Main Thread Interrupted!");
+                break;
+            }
         }
     }
 }

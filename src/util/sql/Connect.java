@@ -14,7 +14,7 @@ public class Connect {
     private static final String USERNAME = "root";
     private static final String PASSWORD = "My$ql_$erveR@2024";
 
-    private static SelectResponse select(String query, Object... params) {
+    public static SelectResponse select(String query, Object... params) {
         SelectResponse response = new SelectResponse();
 
         try {
@@ -132,6 +132,101 @@ public class Connect {
             response.addErrorMessage("SQL Exception: " + e.getMessage());
         }
 
+
+        return response;
+    }
+
+    public static ErrorResponse updateManagerInfo(Manager manager){
+        ErrorResponse response = new ErrorResponse();
+
+        String sql = "update sakila.manager set username=?, email=?, image=? where id=?";
+
+        SelectResponse checkExist = select("select * from sakila.manager where username=?", manager.getUsername().toLowerCase());
+
+        if(!checkExist.isValid()){
+            response.addErrorMessage(checkExist.getErrorMessagesAsString());
+            return response;
+        } else{
+            ArrayList<ArrayList<String>> rows = checkExist.getRows();
+            int idIndex = checkExist.getColumns().indexOf("id");
+            if(!rows.isEmpty()){
+                //This checks if the username exists, but not for this user
+                if(Integer.parseInt(rows.get(0).get(idIndex)) != manager.getId()){
+                    response.addErrorMessage("Username already exists!");
+                    return response;
+                }
+            }
+        }
+
+        Connection conn = null;
+        PreparedStatement ps;
+
+        try{
+            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            conn.setAutoCommit(false);
+            ps = conn.prepareStatement(sql);
+
+            ps.setString(1, manager.getUsername().toLowerCase());
+            ps.setString(2, manager.getEmail());
+            ps.setBinaryStream(3, manager.getImgInputStream());
+            ps.setInt(4, manager.getId());
+
+            int rowsAffected = ps.executeUpdate();
+
+            if(rowsAffected > 0){
+                conn.commit();
+            } else{
+                conn.rollback();
+                response.addErrorMessage("Error with updating information.");
+            }
+        } catch (SQLException e){
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+                response.addErrorMessage("SQL Exception: " + e.getMessage());
+            } catch (SQLException rollbackEx) {
+                response.addErrorMessage("SQL Rollback Exception: " + rollbackEx.getMessage());
+            }
+        }
+
+        return response;
+    }
+
+    public static ErrorResponse updateManagerPassword(Manager manager, String newPassword){
+        ErrorResponse response = new ErrorResponse();
+
+        String sql = "update sakila.manager set password=? where id=?";
+
+        Connection conn = null;
+        PreparedStatement ps;
+
+        try{
+            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            conn.setAutoCommit(false);
+            ps = conn.prepareStatement(sql);
+
+            ps.setString(1, newPassword);
+            ps.setInt(2, manager.getId());
+
+            int rowsAffected = ps.executeUpdate();
+
+            if(rowsAffected > 0){
+                conn.commit();
+            } else{
+                conn.rollback();
+                response.addErrorMessage("Error with updating information.");
+            }
+        } catch (SQLException e){
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+                response.addErrorMessage("SQL Exception: " + e.getMessage());
+            } catch (SQLException rollbackEx) {
+                response.addErrorMessage("SQL Rollback Exception: " + rollbackEx.getMessage());
+            }
+        }
 
         return response;
     }

@@ -8,7 +8,9 @@ public class SelectResponse extends ErrorResponse {
     private ArrayList<String> columns = new ArrayList<>();
     private ArrayList<ArrayList<String>> rows = new ArrayList<>();
 
-    public SelectResponse() {}
+    public SelectResponse() {
+
+    }
 
     public ArrayList<String> getColumns() {
         return columns;

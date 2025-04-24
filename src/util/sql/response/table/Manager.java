@@ -2,7 +2,12 @@ package util.sql.response.table;
 
 import util.ImageUtil;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
 public class Manager {
@@ -30,15 +35,47 @@ public class Manager {
         return id;
     }
 
-    public String getUsername() {
+    public String getUsername(){
         return username;
     }
 
-    public String getEmail() {
+    public void setUsername(String username){
+        this.username = username;
+    }
+
+    public String getEmail(){
         return email;
+    }
+
+    public void setEmail(String email){
+        this.email = email;
     }
 
     public ImageIcon getImg() {
         return img;
+    }
+
+    public InputStream getImgInputStream(){
+        try {
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            BufferedImage bufferedImage = new BufferedImage(
+                    img.getIconWidth(),
+                    img.getIconHeight(),
+                    BufferedImage.TYPE_INT_ARGB
+            );
+            bufferedImage.getGraphics().drawImage(img.getImage(), 0, 0, null);
+            ImageIO.write(bufferedImage, "png", os);
+            return new ByteArrayInputStream(os.toByteArray());
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void setImg(ImageIcon img) {
+        this.img = img;
+    }
+
+    public Manager copy(){
+        return new Manager(id, username, email, img);
     }
 }

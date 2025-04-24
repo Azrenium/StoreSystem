@@ -5,6 +5,7 @@ import util.sql.response.table.Manager;
 import window.Window;
 import window.WindowManager;
 import window.login.Login;
+import window.management.Database;
 
 import javax.swing.*;
 
@@ -40,5 +41,19 @@ public class Welcome extends Window {
 
             dispose();
         });
+
+        viewStoresButton.addActionListener(e -> openDatabaseAndDispose("store"));
+
+        viewEmployeesButton.addActionListener(e -> openDatabaseAndDispose("employee"));
+
+        viewProductsButton.addActionListener(e -> openDatabaseAndDispose("product"));
+    }
+
+    private void openDatabaseAndDispose(String database){
+        Data.setCurrentTable(database);
+
+        WindowManager.startWindow(Database.class);
+
+        dispose();
     }
 }
