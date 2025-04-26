@@ -36,7 +36,7 @@ public class ProfileEditor extends Window {
 
         setContentPane(panel);
 
-        setupData();
+        SwingUtilities.invokeLater(this::setupData);
 
         backButton.addActionListener(e -> {
             WindowManager.startWindow(Welcome.class);

@@ -9,6 +9,8 @@ import window.welcome.Welcome;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 public class Database extends Window {
@@ -16,10 +18,10 @@ public class Database extends Window {
     private JTable table;
     private JButton addRowButton;
     private JButton deleteRowButton;
-    private JButton addColumnButton;
-    private JButton deleteColumnButton;
     private JButton backButton;
     private JTextField searchField;
+    private JComboBox<Object> sortBox;
+    private JComboBox<Object> filterBox;
 
     private ArrayList<String> columns = new ArrayList<>();
     private ArrayList<ArrayList<String>> rows = new ArrayList<>();
@@ -40,6 +42,23 @@ public class Database extends Window {
 
             dispose();
         });
+
+        searchField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                super.keyTyped(e);
+
+                updateTable();
+            }
+        });
+
+        addRowButton.addActionListener(e -> {
+
+        });
+
+        deleteRowButton.addActionListener(e -> {
+
+        });
     }
 
     private void refreshData(){
@@ -51,13 +70,16 @@ public class Database extends Window {
         model.setColumnIdentifiers(columns.toArray());
         table.setModel(model);
 
+        filterBox.setModel(new DefaultComboBoxModel<Object>(columns.toArray()));
+
         updateTable();
     }
 
     private void updateTable(){
         model.setRowCount(0);
-        for(ArrayList<String> row : rows){
+
+        rows.forEach(row -> {
             if(row.stream().anyMatch(it -> it.contains(searchField.getText()))) model.addRow(row.toArray());
-        }
+        });
     }
 }
