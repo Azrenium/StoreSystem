@@ -93,7 +93,6 @@ public class Database extends Window {
                 return;
             }
 
-            System.out.println(filterBox.getSelectedItem());
             refreshData();
         });
 
@@ -105,7 +104,11 @@ public class Database extends Window {
             int index = (table.getColumnModel().getColumnIndex(Data.getCurrentTable().getPKey()));
             int pKey = Integer.parseInt(table.getValueAt(row, index).toString());
 
-            Connect.deleteRow(Data.getCurrentTable().getTableName(), Data.getCurrentTable().getPKey(), pKey);
+            ErrorResponse response = Connect.deleteRow(Data.getCurrentTable().getTableName(), Data.getCurrentTable().getPKey(), pKey);
+
+            if(!response.isValid()){
+                JOptionPane.showMessageDialog(null, response.getErrorMessagesAsString());
+            }
 
             refreshData();
         });

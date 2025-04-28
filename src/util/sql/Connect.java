@@ -161,10 +161,12 @@ public class Connect {
                         );
 
                         response.setData(manager);
+                        return response;
                     } else{
                         response.addErrorMessage("Invalid password!");
                     }
                 }
+                response.addErrorMessage("No account information found!");
             }
         } catch (SQLException e){
             response.addErrorMessage("SQL Exception: " + e.getMessage());
@@ -275,15 +277,21 @@ public class Connect {
         String query = "DELETE FROM sakila." + table + " WHERE " + pKeyName + " = ?";
 
         try(Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
+            connection.setAutoCommit(false);
             PreparedStatement pstmt = connection.prepareStatement(query);
 
             pstmt.setInt(1, primaryKey);
 
             int rowsAffected = pstmt.executeUpdate();
 
-            System.out.println(rowsAffected);
+            if(rowsAffected > 0){
+                connection.commit();
+            } else{
+                connection.rollback();
+                response.addErrorMessage("Error deleting information");
+            }
         } catch (SQLException ex){
-            System.out.println("SQL Error: " + ex.getMessage());
+            response.addErrorMessage("SQL Exception: " + ex.getMessage());
         }
 
         return response;
