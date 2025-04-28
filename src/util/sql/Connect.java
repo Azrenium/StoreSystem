@@ -3,12 +3,13 @@ package util.sql;
 import org.mindrot.jbcrypt.BCrypt;
 import util.sql.response.RowResponse;
 import util.sql.response.SelectResponse;
-import util.sql.response.table.Manager;
+import util.sql.response.row.Manager;
 import util.ErrorResponse;
 
 import java.sql.*;
 import java.util.ArrayList;
 
+@SuppressWarnings("SqlSourceToSinkFlow")
 public class Connect {
     private static final String URL = "jdbc:mysql://localhost:3306/sakila";
     private static final String USERNAME = "root";
@@ -48,6 +49,41 @@ public class Connect {
             }
         } catch (SQLException e) {
             response.addErrorMessage("SQL Error: " + e.getMessage());
+        }
+
+        return response;
+    }
+
+    public static ErrorResponse insert(String query) {
+        ErrorResponse response = new ErrorResponse();
+
+        Connection conn = null;
+
+        try{
+            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            conn.setAutoCommit(false);
+            PreparedStatement pstmt = conn.prepareStatement(query);
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            if(rowsAffected > 0) {
+                System.out.println("Inserted " + rowsAffected + " row(s)");
+                conn.commit();
+            } else{
+                conn.rollback();
+                response.addErrorMessage("Error adding contact");
+            }
+        } catch (SQLException e){
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                    response.addErrorMessage("SQL Error: " + e.getMessage());
+                } else{
+                    response.addErrorMessage("SQL Error: " + e.getMessage());
+                }
+            } catch (SQLException e1) {
+                response.addErrorMessage("Connection Rollback Error: " + e.getMessage());
+            }
         }
 
         return response;
@@ -125,6 +161,8 @@ public class Connect {
                         );
 
                         response.setData(manager);
+                    } else{
+                        response.addErrorMessage("Invalid password!");
                     }
                 }
             }
@@ -220,6 +258,67 @@ public class Connect {
         } catch (SQLException e){
             try {
                 if (conn != null) {
+                    conn.rollback();
+                }
+                response.addErrorMessage("SQL Exception: " + e.getMessage());
+            } catch (SQLException rollbackEx) {
+                response.addErrorMessage("SQL Rollback Exception: " + rollbackEx.getMessage());
+            }
+        }
+
+        return response;
+    }
+
+    public static ErrorResponse deleteRow(String table, String pKeyName,  int primaryKey) {
+        ErrorResponse response = new ErrorResponse();
+
+        String query = "DELETE FROM sakila." + table + " WHERE " + pKeyName + " = ?";
+
+        try(Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD)){
+            PreparedStatement pstmt = connection.prepareStatement(query);
+
+            pstmt.setInt(1, primaryKey);
+
+            int rowsAffected = pstmt.executeUpdate();
+
+            System.out.println(rowsAffected);
+        } catch (SQLException ex){
+            System.out.println("SQL Error: " + ex.getMessage());
+        }
+
+        return response;
+    }
+
+    public static ErrorResponse updateDatabase(String table, String pKeyName, int pKey, String column, Object value) {
+        ErrorResponse response = new ErrorResponse();
+
+
+        String query = "update sakila." + table + " set " + column + " = ? where " + pKeyName + " = " + pKey;
+
+        Connection conn = null;
+
+        try{
+            conn = DriverManager.getConnection(URL, USERNAME, PASSWORD);
+            conn.setAutoCommit(false);
+            PreparedStatement ps = conn.prepareStatement(query);
+
+            if(value instanceof String){
+                ps.setString(1, (String) value);
+            } else if(value instanceof Integer){
+                ps.setInt(1, (Integer) value);
+            }
+
+            int rowsAffected = ps.executeUpdate();
+
+            if(rowsAffected > 0) {
+                conn.commit();
+            } else{
+                conn.rollback();
+                response.addErrorMessage("Error with updating information.");
+            }
+        } catch (SQLException e){
+            try{
+                if(conn != null){
                     conn.rollback();
                 }
                 response.addErrorMessage("SQL Exception: " + e.getMessage());

@@ -1,9 +1,10 @@
 package window.login;
 
 import data.Data;
+import util.ImageUtil;
 import util.sql.Connect;
 import util.sql.response.RowResponse;
-import util.sql.response.table.Manager;
+import util.sql.response.row.Manager;
 import window.Window;
 import window.WindowManager;
 import window.welcome.Welcome;
@@ -16,11 +17,14 @@ public class Login extends Window {
     private JButton loginButton;
     private JPasswordField passwordField;
     private JButton registerButton;
+    private JLabel logoLabel;
 
     public Login() {
         super();
 
         setContentPane(panel);
+
+        logoLabel.setIcon(ImageUtil.getScaledResource("/images/logo.png", 162, 84));
 
         registerButton.addActionListener(e -> {
             WindowManager.startWindow(Register.class);

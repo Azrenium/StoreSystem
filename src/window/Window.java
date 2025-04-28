@@ -6,6 +6,7 @@ import java.awt.*;
 public abstract class Window extends JFrame {
     public Window() {
         setSize(700, 700);
+        setLocationRelativeTo(null);
         setVisible(true);
 
         WindowManager.increaseActiveWindows();

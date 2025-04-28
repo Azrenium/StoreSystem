@@ -1,7 +1,7 @@
 package window.welcome;
 
 import data.Data;
-import util.sql.response.table.Manager;
+import util.sql.Table;
 import window.Window;
 import window.WindowManager;
 import window.login.Login;
@@ -50,7 +50,7 @@ public class Welcome extends Window {
     }
 
     private void openDatabaseAndDispose(String database){
-        Data.setCurrentTable(database);
+        Data.setCurrentTable(Table.valueOf(database.toUpperCase()));
 
         WindowManager.startWindow(Database.class);
 

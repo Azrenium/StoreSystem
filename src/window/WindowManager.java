@@ -27,6 +27,7 @@ public class WindowManager {
                 windowClass.getDeclaredConstructor().newInstance();
             } catch (Exception ex) {
                 System.out.println("Exception on window start: " + ex.getMessage());
+                ex.printStackTrace();
             }
         }).start();
     }

@@ -5,11 +5,6 @@ import util.ErrorResponse;
 public class RowResponse<T> extends ErrorResponse {
     private T data;
 
-    public RowResponse() {
-        invalidate();
-        addErrorMessage("No data found!");
-    }
-
     public T getData() {
         return data;
     }

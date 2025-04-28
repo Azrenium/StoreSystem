@@ -34,7 +34,7 @@ public class Validator {
     public static ErrorResponse isPasswordValid(String password) {
         ErrorResponse response = new ErrorResponse();
 
-        if(password.length() < 8) response.addErrorMessage("Password must be at least 8 characters!");
+        if(password.length() < 7) response.addErrorMessage("Password must be at least 8 characters!");
 
         boolean hasSpecial = false;
         boolean hasCapital = false;

@@ -5,7 +5,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import util.ErrorResponse;
 import util.ImageUtil;
 import util.sql.Connect;
-import util.sql.response.table.Manager;
+import util.sql.response.row.Manager;
 import util.validation.Validator;
 import window.Window;
 import window.WindowManager;

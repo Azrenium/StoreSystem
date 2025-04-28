@@ -1,10 +1,11 @@
 package data;
 
-import util.sql.response.table.Manager;
+import util.sql.Table;
+import util.sql.response.row.Manager;
 
 public class Data {
     private static Manager manager = null;
-    private static String currentTable = null;
+    private static Table currentTable = null;
 
     public static void setManager(Manager manager){
         synchronized(Data.class){
@@ -18,13 +19,13 @@ public class Data {
         }
     }
 
-    public static void setCurrentTable(String currentTable){
+    public static void setCurrentTable(Table currentTable){
         synchronized(Data.class){
             Data.currentTable = currentTable;
         }
     }
 
-    public static String getCurrentTable(){
+    public static Table getCurrentTable(){
         synchronized(Data.class){
             return currentTable;
         }
