@@ -143,12 +143,17 @@ public class Database extends Window {
 
                 for (DataType reqData : Data.getCurrentTable().getReqData()) {
                     if(reqData.getName().equals(columnName)) {
-                        if(reqData instanceof IntType) {
-                            response = Connect.updateDatabase(Data.getCurrentTable().getTableName(), Data.getCurrentTable().getPKey(),
-                                    Integer.parseInt(id), columnName, Integer.parseInt(newValue));
-                        } else if(reqData instanceof StringType) {
-                            response = Connect.updateDatabase(Data.getCurrentTable().getTableName(), Data.getCurrentTable().getPKey(),
-                                    Integer.parseInt(id), columnName, newValue);
+                        try {
+                            if (reqData instanceof IntType) {
+                                response = Connect.updateDatabase(Data.getCurrentTable().getTableName(), Data.getCurrentTable().getPKey(),
+                                        Integer.parseInt(id), columnName, Integer.parseInt(newValue));
+                            } else if (reqData instanceof StringType) {
+                                response = Connect.updateDatabase(Data.getCurrentTable().getTableName(), Data.getCurrentTable().getPKey(),
+                                        Integer.parseInt(id), columnName, newValue);
+                            }
+                        } catch (Exception e){
+                            response = new ErrorResponse();
+                            response.addErrorMessage("Wrong Input!");
                         }
 
                         break;
